@@ -1,0 +1,1 @@
+/home/neil/.config/nvim/ginit.vim
