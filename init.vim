@@ -12,10 +12,11 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-bufferline'
 Plug 'arakashic/chromatica.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'junegunn/rainbow_parentheses.vim'
+
 "Language Specific
 Plug 'wlangstroth/vim-racket'
 
-"Lintings/Autocomplete
+"Linting/Autocomplete
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'tweekmonster/deoplete-clang2'
 Plug 'zchee/deoplete-jedi'
@@ -78,7 +79,10 @@ else
 endif
 
 "Chromatica
-let g:chromatica#enable_at_startup=1
+augroup chromatica
+        autocmd!
+        autocmd FileType c,cpp,objc,objcpp ChromaticaStart
+augroup END
 
 "enable deoplete
 let g:deoplete#enable_at_startup = 1
@@ -233,10 +237,17 @@ nnoremap <leader>s :mksession<CR>
 "turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
 "bound to space
+
+"open dirvish
+nnoremap <leader>d :Dirvish<CR>
+
+"Open FZF Files
+nnoremap <leader>f :Files<CR>
+
 "}}}
 
 "Keybinds {{{
-"Press "jj" quickly exits insert mode
+"Pressing "jj" quickly exits insert mode
 :imap jj <Esc>
 "Terminal mode keybinds
 "<Esc> exits terminal-mode

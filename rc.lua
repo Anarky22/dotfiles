@@ -326,24 +326,29 @@ local bat = lain.widget.bat({
     end
 })
 
--- ALSA volume
+-- Pulse volume
+-- Assumes channels are locked to be the same volume at all times
 local volicon = wibox.widget.imagebox(beautiful.widget_vol)
-beautiful.volume = lain.widget.alsa({
+beautiful.volume = lain.widget.pulse({
     settings = function()
-        if volume_now.status == "off" then
+        if volume_now.muted == "yes" then
             volicon:set_image(beautiful.widget_vol_mute)
-        elseif tonumber(volume_now.level) == 0 then
+        elseif tonumber(volume_now.left) == 0 then
             volicon:set_image(beautiful.widget_vol_no)
-        elseif tonumber(volume_now.level) <= 50 then
+        elseif tonumber(volume_now.left) <= 50 then
             volicon:set_image(beautiful.widget_vol_low)
         else
             volicon:set_image(beautiful.widget_vol)
         end
 
-        widget:set_markup(markup.font(beautiful.font, " " .. volume_now.level .. "% "))
+        widget:set_markup(markup.font(beautiful.font, " " .. volume_now.left .. "% "))
     end
 })
 
+beautiful.volume.widget:buttons(awful.util.table.join(
+        awful.button({}, 1, function () --left click
+                awful.spawn("pavucontrol")
+        end)))
 -- Net
 local neticon = wibox.widget.imagebox(beautiful.widget_net)
 local net = lain.widget.net({
@@ -547,7 +552,11 @@ globalkeys = gears.table.join(
     -- Menubar
     awful.key({ modkey }, "p", function() menubar.show() end,
               {description = "show the menubar", group = "launcher"}),
-    --Multimedia Keys - no mute function for microphone/volume
+    --Multimedia Keys
+    awful.key({}, "#121", function () awful.util.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle", false) end),
+    awful.key({}, "#122", function () awful.util.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%", false) end),
+    awful.key({}, "#123", function () awful.util.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%", false) end),
+    awful.key({}, "#198", function () awful.util.spawn("pactl set-source-mute @DEFAULT_SOURCE@ toggle", false) end),
     --Screenshot bind
     awful.key({}, "#107", function () awful.util.spawn("scrot -e 'mv $f ~/screenshots/ 2>/dev/null'", false) end)
 )
