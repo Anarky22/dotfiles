@@ -172,6 +172,7 @@ set autoindent "keeps indentation same as above line
 
 "In make files use real tabs
 augroup maketab
+        autocmd!
         autocmd FileType make setlocal noexpandtab
 augroup END
 "}}}
@@ -231,8 +232,8 @@ nnoremap gV '[v']
 "}}}
 
 "Leader Shortcuts {{{
-"save session
-nnoremap <leader>s :mksession<CR>
+"toggle vim-obsess
+nnoremap <leader>s :Obsess<CR>
 
 "turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
