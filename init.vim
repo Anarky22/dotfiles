@@ -41,8 +41,12 @@ Plug 'tpope/vim-obsession'
 Plug 'tpope/vim-dispatch'
 "sugar for unix shell commands in linux
 Plug 'tpope/vim-eunuch'
+"Comment stuff out
+Plug 'tpope/vim-commentary'
 "quoting/parenthesizing made simple
 Plug 'tpope/vim-surround'
+"Insert/delete brackets, parens, quotes, in pair
+Plug 'jiangmiao/auto-pairs'
 
 "Initialize plugins
 call plug#end()

@@ -2,6 +2,8 @@
 
      Powerarrow Dark Awesome WM theme
      github.com/copycat-killer
+     edited slightly by me - mainly moved stuff to rc.lua
+     so it worked better
 
 --]]
 
