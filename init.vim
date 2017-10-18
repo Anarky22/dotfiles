@@ -250,6 +250,9 @@ nnoremap <leader>f :Files<CR>
 "Open fzf buffer search
 nnoremap <leader>b :Buffers<CR>
 
+"open fzf tags search
+nnoremap <leader>t :Tags<CR>
+
 "}}}
 
 "Keybinds {{{
