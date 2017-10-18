@@ -29,8 +29,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'justinmk/vim-dirvish'
 
 "Minor helpful plugins
-"Buffer naviagtion
-Plug 'jeetsukumaran/vim-buffergator'
 "Git within vim
 Plug 'tpope/vim-fugitive'
 "Tags
@@ -248,6 +246,9 @@ nnoremap <leader>d :Dirvish<CR>
 
 "Open FZF Files
 nnoremap <leader>f :Files<CR>
+
+"Open fzf buffer search
+nnoremap <leader>b :Buffers<CR>
 
 "}}}
 

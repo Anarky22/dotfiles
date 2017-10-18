@@ -45,12 +45,14 @@ fda() {
   local dir
   dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
 }
+
 # cdf - cd into the directory of the selected file
 cdf() {
    local file
    local dir
    file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
 }
+
 # ftags - search ctags
 ftags() {
   local line
@@ -61,6 +63,7 @@ ftags() {
   ) && ${EDITOR:-vim} $(cut -f3 <<< "$line") -c "set nocst" \
                                       -c "silent tag $(cut -f2 <<< "$line")"
 }
+
 #Shell Bookmarks with fzf
 #Bookmark paths are stored in ~/.fzf_bm_paths
 fbm() {
