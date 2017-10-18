@@ -45,6 +45,8 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 "Insert/delete brackets, parens, quotes, in pair
 Plug 'jiangmiao/auto-pairs'
+"Adds support for plugin maps to .
+Plug 'tpope/vim-repeat'
 
 "Initialize plugins
 call plug#end()
@@ -127,6 +129,8 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
+"Add vim repeat support to vim surround
+silent! call repeat#set('\vim-surroundmap', v:count)
 "}}}
 
 "GUI and Random Stuff {{{
