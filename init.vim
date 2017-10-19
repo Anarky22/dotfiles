@@ -65,9 +65,10 @@ let g:airline_powerline_fonts = 1
 
 "Enable Rainbow Parentheses  - Doesn't seem to work
 " Activation based on file type
-augroup rainbow_lisp
+augroup schemeBase 
   autocmd!
   autocmd FileType lisp,clojure,scheme,racket RainbowParentheses
+  autocmd FIleType racket setlocal commentstring=;\ %s
 augroup END
 "Neomake
 "Use different modes depending on if the laptop is running
