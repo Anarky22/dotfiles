@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 function run {
         if ~ pgrep $1 ;
@@ -8,10 +8,11 @@ function run {
 }
 #make sure Xresources is current
 xrdb -merge ~/.Xresources
-#start redshift
-#python2 /usr/bin/redshift-gtk
-redshift
 #update xdg menu
 xdg_menu --format awesome --root-menu /etc/xdg/menus/arch-applications.menu >~/.config/awesome/archmenu.lua
-#start compton (isn't happening?)
-compton --config ~/.config/compton.conf -b 
+compton --config ~/.config/compton.conf -b
+#start redshift
+# check if redshift is already running before launching it
+if ! pgrep -f "/usr/bin/redshift-gtk" >/dev/null 2>&1 ; then
+    redshift-gtk &
+fi

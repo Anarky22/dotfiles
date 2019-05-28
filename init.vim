@@ -15,6 +15,10 @@ Plug 'junegunn/rainbow_parentheses.vim'
 
 "Language Specific
 Plug 'wlangstroth/vim-racket'
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+Plug 'tweekmonster/django-plus.vim'
+Plug 'lervag/vimtex'
 
 "Linting/Autocomplete
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -22,6 +26,11 @@ Plug 'tweekmonster/deoplete-clang2'
 Plug 'zchee/deoplete-jedi'
 Plug 'artur-shaik/vim-javacomplete2'
 Plug 'neomake/neomake'
+Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern'}
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+"Formating
+Plug 'rhysd/vim-clang-format'
 
 "File Navigation
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -47,6 +56,9 @@ Plug 'tpope/vim-surround'
 Plug 'jiangmiao/auto-pairs'
 "Adds support for plugin maps to .
 Plug 'tpope/vim-repeat'
+
+"Debugging - GDB in Vim
+Plug 'sakhnik/nvim-gdb', {'do': './install.sh' }
 
 "Initialize plugins
 call plug#end()
@@ -130,8 +142,21 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
+"WIP
+"set clang formmating options
+" let g:clang_format#style_options = {
+"                         \ 'AccessModifierOffset' : -4,
+"                         \ 'AllowShortIfStatementsOnASingleLine' : "false",
+"                         \ 'AlwaysBreakTemplateDeclarations' : "true",
+"                         \ 'Standard' : "C++11" }
+"autoformat code on save
+" let g:clang_format#auto_format = 1
+
 "Add vim repeat support to vim surround
 silent! call repeat#set('\vim-surroundmap', v:count)
+
+"JS highlighting stuff
+let g:javascript_plugin_jsdoc = 1
 "}}}
 
 "GUI and Random Stuff {{{
@@ -176,12 +201,30 @@ set tabstop=4 "number of visual spaces per TAB
 set softtabstop=4 "number of spaces in tab when editing
 set expandtab "tabs are spaces
 set autoindent "keeps indentation same as above line
+set shiftwidth=4 "number of spaces per indent
 
 "In make files use real tabs
 augroup maketab
         autocmd!
         autocmd FileType make setlocal noexpandtab
 augroup END
+
+"Fundies 2 java formatting
+function SetFundiesJava()
+        setlocal tabstop=2
+        setlocal softtabstop=2
+        setlocal textwidth=100
+        setlocal shiftwidth=2
+endfunction
+
+augroup fundiesformat
+        autocmd!
+        autocmd FileType java call SetFundiesJava()
+augroup END
+
+augroup jsFormat
+    autocmd!
+    autocmd FileType javascript setlocal tabstop=2
 "}}}
 
 "UI Config {{{
@@ -244,7 +287,6 @@ nnoremap <leader>s :Obsess<CR>
 
 "turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
-"bound to space
 
 "open dirvish
 nnoremap <leader>d :Dirvish<CR>
@@ -261,7 +303,7 @@ nnoremap <leader>t :Tags<CR>
 "}}}
 
 "Keybinds {{{
-"Pressing "jj" quickly exits insert mode
+"Pressing 'jj' quickly exits insert mode
 :imap jj <Esc>
 "Terminal mode keybinds
 "<Esc> exits terminal-mode

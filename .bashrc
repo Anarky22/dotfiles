@@ -11,7 +11,7 @@ PS1='[\u@\h \W]\$ '
 #create rmi alias for mm
 alias rmi='rm -i'
 
-#cd and ls in 1
+# cd and ls in 1
 cl() {
         local dir="$1"
         local dir="${dir:=$HOME}"
@@ -22,11 +22,31 @@ cl() {
         fi
 }
 
-#make directory and cd in
+# make directory and cd in
 md() {
         local dir="$1"
         mkdir "$dir"
         cd "$dir"
+}
+
+# move file and follow it
+mvf() {
+    local file="$1"
+    local dir="$2"
+    mv "$file" "$dir"
+    if [[ -f "$file" && -d "$dir" ]]; then
+        cd "$dir"
+    fi
+}
+
+# copy file and follow it
+cpf() {
+    local file="$1"
+    local dir="$2"
+    cp "$file" "$dir"
+    if [[ -f "$file" && -d "$dir" ]]; then
+        cd "$dir"
+    fi
 }
 
 
