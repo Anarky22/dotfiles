@@ -19,16 +19,21 @@ Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
 Plug 'tweekmonster/django-plus.vim'
 Plug 'lervag/vimtex'
+Plug 'rust-lang/rust.vim'
+Plug 'fatih/vim-go' , { 'do': ':GoUpdateBinaries' }
 
 "Linting/Autocomplete
+"Plug 'neomake/neomake'
+Plug 'dense-analysis/ale'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'tweekmonster/deoplete-clang2'
+" Plug 'Shougo/deoplete-clangx'
 Plug 'zchee/deoplete-jedi'
 Plug 'artur-shaik/vim-javacomplete2'
-Plug 'neomake/neomake'
 Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern'}
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
+Plug 'sebastianmarkow/deoplete-rust'
+Plug 'deoplete-plugins/deoplete-go', { 'do': 'make' }
 "Formating
 Plug 'rhysd/vim-clang-format'
 
@@ -75,27 +80,35 @@ let g:airline_theme='apprentice'
 "powerline fonts for airline
 let g:airline_powerline_fonts = 1
 
-"Enable Rainbow Parentheses  - Doesn't seem to work
+" vimtex set up neovim-remote
+let g:vimtex_compile_progname = 'nvr'
+
+"Enable Rainbow Parentheses
 " Activation based on file type
 augroup schemeBase 
   autocmd!
-  autocmd FileType lisp,clojure,scheme,racket RainbowParentheses
+  autocmd FileType lisp,clojure,scheme,racket,rust RainbowParentheses
   autocmd FIleType racket setlocal commentstring=;\ %s
 augroup END
+
+"ALE
+let g:ale_linters = {'cpp': ['clang', 'g++']}
 "Neomake
 "Use different modes depending on if the laptop is running
 "on battery or not
-function! MyOnBattery()
-  return readfile('/sys/class/power_supply/AC/online') == ['0']
-endfunction
+" function! MyOnBattery()
+"   return readfile('/sys/class/power_supply/AC/online') == ['0']
+" endfunction
 
-if MyOnBattery()
-  call neomake#configure#automake('w')
-else
-  call neomake#configure#automake('nw', 1000)
-endif
-
+" if MyOnBattery()
+"   call neomake#configure#automake('w')
+" else
+"   call neomake#configure#automake('nw', 1000)
+" endif
+"
 "Chromatica
+let g:chromatica#highlight_feature_level = 1
+
 augroup chromatica
         autocmd!
         autocmd FileType c,cpp,objc,objcpp ChromaticaStart
@@ -103,6 +116,21 @@ augroup END
 
 "enable deoplete
 let g:deoplete#enable_at_startup = 1
+"Change clang binary path
+call deoplete#custom#var('clangx', 'clang_binary', '/usr/local/bin/clang')
+
+" Change clang options
+call deoplete#custom#var('clangx', 'default_c_options', '')
+call deoplete#custom#var('clangx', 'default_cpp_options', '')
+
+"Set up rust completion
+let g:deoplete#sources#rust#racer_binary='/usr/bin/racer'
+let g:deoplete#sources#rust#rust_source_path='/usr/src/rust/src'
+let g:deoplete#sources#rust#show_duplicates=1
+
+"Set up go completion
+let g:deoplete#sources#go#gocode_binary='/home/neil/go/bin/gocode'
+
 "enable vim-javacomplete2
 augroup javacomplete
         autocmd!
@@ -157,6 +185,19 @@ silent! call repeat#set('\vim-surroundmap', v:count)
 
 "JS highlighting stuff
 let g:javascript_plugin_jsdoc = 1
+
+"Go Highlighting
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+" let g:go_auto_sameids = 1
+let g:go_fmt_command = "goimports"
+
 "}}}
 
 "GUI and Random Stuff {{{

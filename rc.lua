@@ -27,7 +27,7 @@ local dpi           = require("beautiful.xresources").apply_dpi
 -- }}}
 
 -- Call bash autorun script autorun.sh
-awful.spawn.with_shell("~/.config/awesome/autorun.sh")
+awful.spawn.with_shell("bash ~/.config/awesome/autorun.sh")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -99,7 +99,7 @@ local editor       = os.getenv("EDITOR") or "nvim"
 local gui_editor   = "nvim-qt"
 local browser      = "firefox"
 local guieditor    = "nvim-qt"
-local scrlocker    = "light-locker-command -l"  --"slock"
+local scrlocker    = "dm-tool lock"--"light-locker-command -l"  --"slock"
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5" }
