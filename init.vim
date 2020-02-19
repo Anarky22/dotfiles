@@ -23,24 +23,19 @@ Plug 'rust-lang/rust.vim'
 Plug 'fatih/vim-go' , { 'do': ':GoUpdateBinaries' }
 
 "Linting/Autocomplete
-"Plug 'neomake/neomake'
+Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'dense-analysis/ale'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-" Plug 'Shougo/deoplete-clangx'
-Plug 'zchee/deoplete-jedi'
-Plug 'artur-shaik/vim-javacomplete2'
-Plug 'carlitux/deoplete-ternjs', { 'do': 'npm install -g tern'}
-Plug 'SirVer/ultisnips'
+
+" Snippets
+" Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-Plug 'sebastianmarkow/deoplete-rust'
-Plug 'deoplete-plugins/deoplete-go', { 'do': 'make' }
+
 "Formating
 Plug 'rhysd/vim-clang-format'
 
 "File Navigation
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'justinmk/vim-dirvish'
 
 "Minor helpful plugins
 "Git within vim
@@ -92,21 +87,31 @@ augroup schemeBase
 augroup END
 
 "ALE
+let g:ale_completion_enabled = 0
 let g:ale_linters = {'cpp': ['clang', 'g++']}
-"Neomake
+" set up airline to work with ale
+let g:airline#extensions#ale#enabled = 1
+" show all errors
+let g:ale_open_list = 1
+" explicitly lint on save
+let g:ale_lint_on_save = 1
+"keep sign gutter open
+let g:ale_sign_column_always = 1
 "Use different modes depending on if the laptop is running
 "on battery or not
-" function! MyOnBattery()
-"   return readfile('/sys/class/power_supply/AC/online') == ['0']
-" endfunction
+function! MyOnBattery()
+  return readfile('/sys/class/power_supply/AC/online') == ['0']
+endfunction
 
-" if MyOnBattery()
-"   call neomake#configure#automake('w')
-" else
-"   call neomake#configure#automake('nw', 1000)
-" endif
-"
-"Chromatica
+if MyOnBattery()
+    let g:ale_lint_on_text_changed = 'never'
+    let g:ale_lint_on_insert_leave = 0
+else
+    let g:ale_lint_on_text_changed = 'normal'
+    let g:ale_lint_on_insert_leave = 1
+endif
+
+" Chromatica
 let g:chromatica#highlight_feature_level = 1
 
 augroup chromatica
@@ -114,28 +119,147 @@ augroup chromatica
         autocmd FileType c,cpp,objc,objcpp ChromaticaStart
 augroup END
 
-"enable deoplete
-let g:deoplete#enable_at_startup = 1
-"Change clang binary path
-call deoplete#custom#var('clangx', 'clang_binary', '/usr/local/bin/clang')
+" CoC settings
+" TextEdit might fail if hidden is not set.
+set hidden
 
-" Change clang options
-call deoplete#custom#var('clangx', 'default_c_options', '')
-call deoplete#custom#var('clangx', 'default_cpp_options', '')
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
 
-"Set up rust completion
-let g:deoplete#sources#rust#racer_binary='/usr/bin/racer'
-let g:deoplete#sources#rust#rust_source_path='/usr/src/rust/src'
-let g:deoplete#sources#rust#show_duplicates=1
+" Give more space for displaying messages.
+set cmdheight=2
 
-"Set up go completion
-let g:deoplete#sources#go#gocode_binary='/home/neil/go/bin/gocode'
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
 
-"enable vim-javacomplete2
-augroup javacomplete
-        autocmd!
-        autocmd Filetype java setlocal omnifunc=javacomplete#Complete
-augroup END
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+if has('patch8.1.1068')
+  " Use `complete_info` if your (Neo)Vim version supports it.
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
+
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+xmap <leader>a  <Plug>(coc-codeaction-selected)
+nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current line.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Introduce function text object
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap if <Plug>(coc-funcobj-i)
+omap af <Plug>(coc-funcobj-a)
+
+" Use <TAB> for selections ranges.
+" NOTE: Requires 'textDocument/selectionRange' support from the language server.
+" coc-tsserver, coc-python are the examples of servers that support it.
+nmap <silent> <TAB> <Plug>(coc-range-select)
+xmap <silent> <TAB> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings using CoCList:
+" Show all diagnostics.
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 "FZF
 " Default fzf layout
@@ -170,11 +294,27 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
+" CoC Snippets
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
 "WIP
 "set clang formmating options
 " let g:clang_format#style_options = {
 "                         \ 'AccessModifierOffset' : -4,
-"                         \ 'AllowShortIfStatementsOnASingleLine' : "false",
+"                         \ 'AllowShortIfStatementsOnASingleLine' : "true",
 "                         \ 'AlwaysBreakTemplateDeclarations' : "true",
 "                         \ 'Standard' : "C++11" }
 "autoformat code on save
@@ -251,12 +391,12 @@ augroup maketab
 augroup END
 
 "Fundies 2 java formatting
-function SetFundiesJava()
-        setlocal tabstop=2
-        setlocal softtabstop=2
-        setlocal textwidth=100
-        setlocal shiftwidth=2
-endfunction
+" function SetFundiesJava()
+"         setlocal tabstop=2
+"         setlocal softtabstop=2
+"         setlocal textwidth=100
+"         setlocal shiftwidth=2
+" endfunction
 
 augroup fundiesformat
         autocmd!
@@ -329,9 +469,6 @@ nnoremap <leader>s :Obsess<CR>
 "turn off search highlight
 nnoremap <leader><space> :nohlsearch<CR>
 
-"open dirvish
-nnoremap <leader>d :Dirvish<CR>
-
 "Open FZF Files
 nnoremap <leader>f :Files<CR>
 
@@ -340,6 +477,10 @@ nnoremap <leader>b :Buffers<CR>
 
 "open fzf tags search
 nnoremap <leader>t :Tags<CR>
+
+" Ale next and previous error
+nnoremap <leader>e :<Plug>(ale_next_wrap)
+nnoremap <leader>w :<Plug>(ale_previous_wrap)
 
 "}}}
 
