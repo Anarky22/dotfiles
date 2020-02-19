@@ -93,6 +93,7 @@ let g:ale_linters = {'cpp': ['clang', 'g++']}
 let g:airline#extensions#ale#enabled = 1
 " show all errors
 let g:ale_open_list = 1
+let g:ale_list_window_size = 5
 " explicitly lint on save
 let g:ale_lint_on_save = 1
 "keep sign gutter open
@@ -237,13 +238,10 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+" Airline integration
+let g:airline#extension#coc#enabled = 1
 
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Mappings using CoCList:
+"" Mappings using CoCList:
 " Show all diagnostics.
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions.
