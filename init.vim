@@ -92,8 +92,8 @@ let g:ale_linters = {'cpp': ['clang', 'g++']}
 " set up airline to work with ale
 let g:airline#extensions#ale#enabled = 1
 " show all errors
-let g:ale_open_list = 1
-let g:ale_list_window_size = 5
+" let g:ale_open_list = 1
+" let g:ale_list_window_size = 5
 " explicitly lint on save
 let g:ale_lint_on_save = 1
 "keep sign gutter open
@@ -114,6 +114,13 @@ endif
 
 " Chromatica
 let g:chromatica#highlight_feature_level = 1
+if MyOnBattery()
+    let g:chromatica#responsive_mode = 1
+else
+    let g:chromatica#responsive_mode = 0
+endif
+" Fix missing include on linux
+let g:chromatica#global_args = ['-isystem/usr/lib/llvm-9.0.1/lib/clang/9.0.1/include']
 
 augroup chromatica
         autocmd!
@@ -196,8 +203,8 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 nmap <leader>rn <Plug>(coc-rename)
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+xmap <leader>j  <Plug>(coc-format-selected)
+nmap <leader>j  <Plug>(coc-format-selected)
 
 augroup mygroup
   autocmd!
@@ -259,6 +266,22 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
+" CoC Snippets
+" Use <C-l> for trigger snippet expand.
+imap <C-l> <Plug>(coc-snippets-expand)
+
+" Use <C-j> for select text for visual placeholder of snippet.
+vmap <C-j> <Plug>(coc-snippets-select)
+
+" Use <C-j> for jump to next placeholder, it's default of coc.nvim
+let g:coc_snippet_next = '<c-j>'
+
+" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+let g:coc_snippet_prev = '<c-k>'
+
+" Use <C-j> for both expand and jump (make expand higher priority.)
+imap <C-j> <Plug>(coc-snippets-expand-jump)
+
 "FZF
 " Default fzf layout
 " - down / up / left / right
@@ -292,21 +315,6 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
-" CoC Snippets
-" Use <C-l> for trigger snippet expand.
-imap <C-l> <Plug>(coc-snippets-expand)
-
-" Use <C-j> for select text for visual placeholder of snippet.
-vmap <C-j> <Plug>(coc-snippets-select)
-
-" Use <C-j> for jump to next placeholder, it's default of coc.nvim
-let g:coc_snippet_next = '<c-j>'
-
-" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-let g:coc_snippet_prev = '<c-k>'
-
-" Use <C-j> for both expand and jump (make expand higher priority.)
-imap <C-j> <Plug>(coc-snippets-expand-jump)
 
 "WIP
 "set clang formmating options
