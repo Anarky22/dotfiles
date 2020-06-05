@@ -10,8 +10,10 @@ Plug 'romainl/Apprentice', { 'branch': 'fancylines-and-neovim' }
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'bling/vim-bufferline'
-Plug 'arakashic/chromatica.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'junegunn/rainbow_parentheses.vim'
+Plug 'simnalamburt/vim-mundo'
+Plug 'preservim/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
 
 "Language Specific
 Plug 'wlangstroth/vim-racket'
@@ -21,6 +23,8 @@ Plug 'tweekmonster/django-plus.vim'
 Plug 'lervag/vimtex'
 Plug 'rust-lang/rust.vim'
 Plug 'fatih/vim-go' , { 'do': ':GoUpdateBinaries' }
+" Plug 'arakashic/chromatica.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'octol/vim-cpp-enhanced-highlight'
 
 "Linting/Autocomplete
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
@@ -41,7 +45,7 @@ Plug 'junegunn/fzf.vim'
 "Git within vim
 Plug 'tpope/vim-fugitive'
 "Tags
-Plug 'ludovicchabant/vim-gutentags'
+" Plug 'ludovicchabant/vim-gutentags'
 "Session management
 Plug 'tpope/vim-obsession'
 "Async build/test dispatcher
@@ -70,10 +74,18 @@ call plug#end()
 let g:loaded_netrw = 1
 let g:loaded_netrwPlugin = 1
 
+" NERDTree
+" Close vim if last open buffer is NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
 "set airline theme
 let g:airline_theme='apprentice'
 "powerline fonts for airline
 let g:airline_powerline_fonts = 1
+
+" mundo
+let g:mundo_width = 60
+let g:mundo_preview_height = 20
 
 " vimtex set up neovim-remote
 let g:vimtex_compile_progname = 'nvr'
@@ -88,7 +100,21 @@ augroup END
 
 "ALE
 let g:ale_completion_enabled = 0
-let g:ale_linters = {'cpp': ['clang', 'g++']}
+let g:ale_echo_msg_format = '(%linter%) %s'
+let g:ale_linters = {'c': ['clang', 'gcc'], 'cpp': ['clang', 'g++']}
+let g:ale_c_gcc_options = '-Wall -Wextra -Wpedantic'
+let g:ale_c_clang_options = '-Wall -Wextra -Wpedantic'
+let g:ale_cpp_gcc_options = '-Wall -Wextra -Wpedantic -std=c++14'
+let g:ale_cpp_clang_options = '-Wall -Wextra -Wpedantic -std=c++14'
+let g:ale_pattern_options = {
+\           'cs4500project': {
+\               'ale_cpp_gcc_options': '-Wall -Wextra -Wpedantic -std=c++17 -I/home/neil/school/software_development/cs4500project/include -I/home/neil/school/software_development/cs4500project/boat-a1p1/include',
+\               'ale_cpp_clang_options': '-Wall -Wextra -Wpedantic -std=c++17 -I/home/neil/school/software_development/cs4500project/include -I/home/neil/school/software_development/cs4500project/boat-a1p1/include',
+\               'ale_c_gcc_options': '-Wall -Wextra -Wpedantic -I/home/neil/school/software_development/cs4500project/include -I/home/neil/school/software_development/cs4500project/boat-a1p1/include',
+\               'ale_c_clang_options': '-Wall -Wextra -Wpedantic -I/home/neil/school/software_development/cs4500project/include -I/home/neil/school/software_development/cs4500project/boat-a1p1/include',
+\           },
+\}
+let g:ale_pattern_options_enabled = 1
 " set up airline to work with ale
 let g:airline#extensions#ale#enabled = 1
 " show all errors
@@ -100,32 +126,31 @@ let g:ale_lint_on_save = 1
 let g:ale_sign_column_always = 1
 "Use different modes depending on if the laptop is running
 "on battery or not
-function! MyOnBattery()
-  return readfile('/sys/class/power_supply/AC/online') == ['0']
-endfunction
 
-if MyOnBattery()
-    let g:ale_lint_on_text_changed = 'never'
-    let g:ale_lint_on_insert_leave = 0
-else
-    let g:ale_lint_on_text_changed = 'normal'
-    let g:ale_lint_on_insert_leave = 1
-endif
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
+" Use arrow keys to go through errors
+nmap <silent> <Up> <Plug>(ale_previous_wrap)
+nmap <silent> <Down> <Plug>(ale_next_wrap)
 
 " Chromatica
-let g:chromatica#highlight_feature_level = 1
-if MyOnBattery()
-    let g:chromatica#responsive_mode = 1
-else
-    let g:chromatica#responsive_mode = 0
-endif
+" let g:chromatica#highlight_feature_level = 1
+" let g:chromatica#responsive_mode = 1
 " Fix missing include on linux
-let g:chromatica#global_args = ['-isystem/usr/lib/llvm-9.0.1/lib/clang/9.0.1/include']
+" let g:chromatica#global_args = ['-isystem/usr/lib/clang/9.0.1/include']
 
-augroup chromatica
-        autocmd!
-        autocmd FileType c,cpp,objc,objcpp ChromaticaStart
-augroup END
+" augroup chromatica
+"         autocmd!
+"         autocmd FileType c,cpp,objc,objcpp ChromaticaStart
+" augroup END
+
+" CPP Enhanced highlighting
+let g:cpp_class_scope_highlight = 1
+let g:cpp_member_variable_highlight = 1
+let g:cpp_class_decl_highlight = 1
+let g:cpp_posix_standard = 1
+let g:cpp_experimental_simple_template_highlight = 1
+let g:cpp_concepts_highlight = 1
 
 " CoC settings
 " TextEdit might fail if hidden is not set.
@@ -322,7 +347,7 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 "                         \ 'AccessModifierOffset' : -4,
 "                         \ 'AllowShortIfStatementsOnASingleLine' : "true",
 "                         \ 'AlwaysBreakTemplateDeclarations' : "true",
-"                         \ 'Standard' : "C++11" }
+"                         \ 'Standard' : "C++17" }
 "autoformat code on save
 " let g:clang_format#auto_format = 1
 
@@ -370,6 +395,9 @@ set hidden
 
 "Persistant Undo - Maintain undo history between sessions
 set undofile
+
+"Highlight 80 columns
+set colorcolumn=80
 
 "}}}
 
@@ -469,6 +497,9 @@ nnoremap gV '[v']
 "}}}
 
 "Leader Shortcuts {{{
+" NERDTree
+nnoremap <leader>n :NERDTreeToggle<CR>
+
 "toggle vim-obsess
 nnoremap <leader>s :Obsess<CR>
 
@@ -483,6 +514,8 @@ nnoremap <leader>b :Buffers<CR>
 
 "open fzf tags search
 nnoremap <leader>t :Tags<CR>
+"Open undo tree
+nnoremap <leader>u :MundoToggle<cr>
 
 " Ale next and previous error
 nnoremap <leader>e :<Plug>(ale_next_wrap)
