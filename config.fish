@@ -8,6 +8,7 @@ set -U fish_greeting
 
 set -x EDITOR /usr/bin/nvim
 
+alias icat="kitty +kitten icat"
 # set remote terminal TERM on ssh
 alias ssh="kitty +kitten ssh"
 # alias ssh="TERM=\'xterm-256color\' command ssh"
