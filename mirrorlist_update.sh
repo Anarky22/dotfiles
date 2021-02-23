@@ -10,7 +10,7 @@
 # backup
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.backup
 # pull and uncomment mirror list, store at /tmp/unsorted_mirrorlist
-curl -s "https://archlinux.org/mirrorlist/all/https/" | sed -e 's/^#Server/Server/' -e '/^#/d' > /tmp/unsorted_mirrorlist
+curl -s "https://archlinux.org/mirrorlist/?country=US&country=CA&protocol=https" | sed -e 's/^#Server/Server/' -e '/^#/d' > /tmp/unsorted_mirrorlist
 # Rank top 10 mirrors and store at /tmp/mirrorlist
 rankmirrors -n 10 /tmp/unsorted_mirrorlist > /tmp/mirrorlist
 # see new mirrorlist
