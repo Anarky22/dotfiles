@@ -8,8 +8,12 @@
             "initializationOptions": {
                 "cache": {
                     "directory": "/tmp/ccls"
+                },
+                "client": {
+                    "snippetSupport": true
                 }
             }
         }
-    }
+    },
+    "rust-analyzer.server.path": "/usr/bin/rust-analyzer"
 }

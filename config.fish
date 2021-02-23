@@ -1,12 +1,16 @@
 # Set umask
 umask 022
 
-set -U fish_user_paths /usr/local/sbin /usr/local/bin /usr/bin
+set -U fish_user_paths /usr/local/sbin /usr/local/bin /usr/bin /home/neil/.local/bin/ /home/neil/mpich-install/bin/
 
 # disable start message
 set -U fish_greeting
 
-set -x RUST_SRC_PATH /usr/src/rust/src
+set -x EDITOR /usr/bin/nvim
+
+# set remote terminal TERM on ssh
+alias ssh="kitty +kitten ssh"
+# alias ssh="TERM=\'xterm-256color\' command ssh"
 
 # Use exa instead of ls
 alias ls="exa"
@@ -20,6 +24,3 @@ alias cl="cd $argv; and exa"
 
 # Termcap is outdated, old, and crusty, kill it.
 set -x TERMCAP
-
-# Man is much better than us at figuring this out
-set -x MANPATH

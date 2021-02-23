@@ -26,6 +26,13 @@ local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
 local dpi           = require("beautiful.xresources").apply_dpi
 -- }}}
 
+-- Update awesome-copycats and display if it updated
+local copycat_update = string.format("cd %s/.config/awesome/awesome-copycats && git pull | grep -q -v \'Already up-to-date.\'", os.getenv("HOME"))
+awful.spawn.easy_async(copycat_update, function(stdout, stderr, reason, exit_code)
+    naughty.notify({ preset = naughty.config.presets.low,
+                     title = "Update to awesome-copycats found!", 
+                     text = stdout })
+end)
 -- Call bash autorun script autorun.sh
 awful.spawn.with_shell("bash ~/.config/awesome/autorun.sh")
 
@@ -62,7 +69,7 @@ local function run_once(cmd_arr)
     end
 end
 
-run_once({ "urxvtd", "unclutter -root" }) -- entries must be separated by commas
+run_once({ "unclutter -root" }) -- entries must be separated by commas
 
 -- This function implements the XDG autostart specification
 --[[
@@ -94,12 +101,12 @@ local themes = {
 local chosen_theme = themes[8]
 local modkey       = "Mod4"
 local altkey       = "Mod1"
-local terminal     = "urxvtc"
+local terminal     = "kitty --single-instance"
 local editor       = os.getenv("EDITOR") or "nvim"
 local gui_editor   = "nvim-qt"
 local browser      = "firefox"
 local guieditor    = "nvim-qt"
-local scrlocker    = "dm-tool lock"--"light-locker-command -l"  --"slock"
+local scrlocker    = "light-locker-command -l" --"dm-tool lock" --"slock"
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5" }
@@ -191,7 +198,8 @@ lain.layout.cascade.tile.extra_padding = dpi(5)
 lain.layout.cascade.tile.nmaster       = 5
 lain.layout.cascade.tile.ncol          = 2
 
-beautiful.init(string.format("%s/.config/awesome/themes/%s/theme.lua", os.getenv("HOME"), chosen_theme))
+-- beautiful.init(string.format("%s/.config/awesome/awesome-copycats/themes/%s/theme.lua", os.getenv("HOME"), chosen_theme))
+beautiful.init(string.format("%s/.config/awesome/awesome-copycats/themes/my_theme/theme.lua", os.getenv("HOME")))
 -- }}}
 
 -- {{{ Menu

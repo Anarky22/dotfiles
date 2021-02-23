@@ -1,3 +1,36 @@
+" NeoVim Defaults {{{
+if !has("nvim")
+    set nocompatible
+    syntax enable
+    filetype plugin indent on
+    set autoindent
+    set autoread
+    set backspace=indent,eol,start
+    set complete-=i
+    set display=lastline
+    set encoding=utf-8
+    set formatoptions=tcqj
+    set history=10000
+    set hlsearch
+    set incsearch
+    set langnoremap
+    set laststatus=2
+    set listchars=tab:>\ ,trail:-,nbsp:+
+    set mouse=a
+    set nrformats=hex
+    set sessionoptions-=options
+    set smarttab
+    set tabpagemax=50
+    set tags=./tags;,tags
+    set ttyfast
+    set viminfo+=!
+    set wildmenu
+endif
+" }}}
+
+" Disable ale lsp for better CoC integration - must come before plugins are
+" loaded
+let g:ale_disable_lsp = 1
 
 " Vim Plug {{{
 "Vim Plug - Load Plugins
@@ -8,8 +41,8 @@ call plug#begin('~/.local/share/nvim/plugged')
 "Colorscheme/UI
 Plug 'romainl/Apprentice', { 'branch': 'fancylines-and-neovim' }
 Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'bling/vim-bufferline'
+" Plug 'vim-airline/vim-airline-themes'
+" Plug 'bling/vim-bufferline'
 Plug 'junegunn/rainbow_parentheses.vim'
 Plug 'simnalamburt/vim-mundo'
 Plug 'preservim/nerdtree'
@@ -25,6 +58,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'fatih/vim-go' , { 'do': ':GoUpdateBinaries' }
 " Plug 'arakashic/chromatica.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'elixir-editors/vim-elixir'
 
 "Linting/Autocomplete
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
@@ -61,9 +95,6 @@ Plug 'jiangmiao/auto-pairs'
 "Adds support for plugin maps to .
 Plug 'tpope/vim-repeat'
 
-"Debugging - GDB in Vim
-Plug 'sakhnik/nvim-gdb', {'do': './install.sh' }
-
 "Initialize plugins
 call plug#end()
 
@@ -82,6 +113,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 let g:airline_theme='apprentice'
 "powerline fonts for airline
 let g:airline_powerline_fonts = 1
+"enable tabline
+let g:airline#extensions#tabline#enabled = 1
 
 " mundo
 let g:mundo_width = 60
@@ -89,6 +122,7 @@ let g:mundo_preview_height = 20
 
 " vimtex set up neovim-remote
 let g:vimtex_compile_progname = 'nvr'
+let g:tex_flavor = "latex"
 
 "Enable Rainbow Parentheses
 " Activation based on file type
@@ -99,20 +133,34 @@ augroup schemeBase
 augroup END
 
 "ALE
-let g:ale_completion_enabled = 0
 let g:ale_echo_msg_format = '(%linter%) %s'
-let g:ale_linters = {'c': ['clang', 'gcc'], 'cpp': ['clang', 'g++']}
-let g:ale_c_gcc_options = '-Wall -Wextra -Wpedantic'
-let g:ale_c_clang_options = '-Wall -Wextra -Wpedantic'
-let g:ale_cpp_gcc_options = '-Wall -Wextra -Wpedantic -std=c++14'
-let g:ale_cpp_clang_options = '-Wall -Wextra -Wpedantic -std=c++14'
+let g:ale_linters = {
+\           'c': ['clang', 'gcc',  'ccls'],
+\           'cpp': ['clang', 'g++', 'ccls']
+\}
+let g:ale_c_cc_options = '-Wall -Wextra -Wpedantic -std=c17'
+let g:ale_c_gcc_options = '-Wall -Wextra -Wpedantic -std=c17'
+let g:ale_c_clang_options = '-Wall -Wextra -Wpedantic -std=c17'
+let g:ale_cpp_cc_options = '-Wall -Wextra -Wpedantic -std=c++17'
+let g:ale_cpp_gcc_options = '-Wall -Wextra -Wpedantic -std=c++17'
+let g:ale_cpp_clang_options = '-Wall -Wextra -Wpedantic -std=c++17'
 let g:ale_pattern_options = {
 \           'cs4500project': {
-\               'ale_cpp_gcc_options': '-Wall -Wextra -Wpedantic -std=c++17 -I/home/neil/school/software_development/cs4500project/include -I/home/neil/school/software_development/cs4500project/boat-a1p1/include',
-\               'ale_cpp_clang_options': '-Wall -Wextra -Wpedantic -std=c++17 -I/home/neil/school/software_development/cs4500project/include -I/home/neil/school/software_development/cs4500project/boat-a1p1/include',
-\               'ale_c_gcc_options': '-Wall -Wextra -Wpedantic -I/home/neil/school/software_development/cs4500project/include -I/home/neil/school/software_development/cs4500project/boat-a1p1/include',
-\               'ale_c_clang_options': '-Wall -Wextra -Wpedantic -I/home/neil/school/software_development/cs4500project/include -I/home/neil/school/software_development/cs4500project/boat-a1p1/include',
+\               'ale_cpp_gcc_options': '-Wall -Wextra -Wpedantic -std=c++17',
+\               'ale_cpp_clang_options': '-Wall -Wextra -Wpedantic -std=c++17',
+\               'ale_c_gcc_options': '-std=c17 -Wall -Wextra -Wpedantic',
+\               'ale_c_clang_options': '-std=c17 -Wall -Wextra -Wpedantic',
 \           },
+\           'CapstoneDeviceProgram': {
+\               'ale_c_cc_options': '-std=c17 -Wall -Wextra -Wpedantic -I/home/neil/school/capstone/CapstoneDeviceProgram/include -I/home/neil/school/capstone/pigpio',
+\               'ale_c_gcc_options': '-std=c17 -Wall -Wextra -Wpedantic -I/home/neil/school/capstone/CapstoneDeviceProgram/include -I/home/neil/school/capstone/pigpio',
+\               'ale_c_clang_options': '-std=c17 -Wall -Wextra -Wpedantic -I/home/neil/school/capstone/CapstoneDeviceProgram/include -I/home/neil/school/capstone/pigpio',
+\           },
+\           'eece4534': {
+\               'ale_c_cc_options': '-std=c89 -Wall -Wextra -Wpedantic -I/home/neil/school/eece4534/linux-4.19-zed/include',
+\               'ale_c_gcc_options': '-std=c89 -Wall -Wextra -Wpedantic -I/home/neil/school/eece4534/linux-4.19-zed/include',
+\               'ale_c_clang_options': '-std=c89 -Wall -Wextra -Wpedantic -I/home/neil/school/eece4534/linux-4.19-zed/include',
+\           }
 \}
 let g:ale_pattern_options_enabled = 1
 " set up airline to work with ale
@@ -271,7 +319,7 @@ command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 " Add `:OR` command for organize imports of the current buffer.
 command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
 " Airline integration
-let g:airline#extension#coc#enabled = 1
+let g:airline#extensions#coc#enabled = 1
 
 "" Mappings using CoCList:
 " Show all diagnostics.
@@ -420,26 +468,21 @@ set shiftwidth=4 "number of spaces per indent
 
 "In make files use real tabs
 augroup maketab
-        autocmd!
-        autocmd FileType make setlocal noexpandtab
-augroup END
-
-"Fundies 2 java formatting
-" function SetFundiesJava()
-"         setlocal tabstop=2
-"         setlocal softtabstop=2
-"         setlocal textwidth=100
-"         setlocal shiftwidth=2
-" endfunction
-
-augroup fundiesformat
-        autocmd!
-        autocmd FileType java call SetFundiesJava()
-augroup END
-
-augroup jsFormat
     autocmd!
-    autocmd FileType javascript setlocal tabstop=2
+    autocmd FileType make setlocal noexpandtab
+augroup END
+
+function SetCLanguagesFormat()
+    setlocal tabstop=2
+    setlocal softtabstop=2
+    setlocal shiftwidth=2
+endfunction
+
+" augroup c_cpp_format
+"     autocmd!
+"     autocmd FileType c,cpp call SetCLanguagesFormat()
+" augroup END
+
 "}}}
 
 "UI Config {{{
