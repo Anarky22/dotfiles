@@ -29,19 +29,32 @@ if !has("nvim")
 endif
 " }}}
 
-" Disable ale lsp for better CoC integration - must come before plugins are
-" loaded
-if has('nvim')
-    let g:ale_disable_lsp = 1
-endif
-
 " Vim Plug {{{
-"Vim Plug - Load Plugins
-"Set plugin dirrectory to ~/.local/share/nvim/plugged
 if has('nvim')
+    "Vim Plug - Load Plugins
+    "Set plugin dirrectory to ~/.local/share/nvim/plugged
     call plug#begin('~/.local/share/nvim/plugged')
 
     "Install
+    "Dependancies
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'nvim-lua/popup.nvim'
+    
+    "Treesitter
+    Plug 'nvim-treesitter/nvim-treesitter', { 'do': 'TSUpdate' }    
+
+    "Linting/Autocomplete
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'hrsh7th/nvim-compe'
+    " Plug 'neoclide/coc.nvim', { 'branch': 'release' }
+    
+    "Snippets
+    Plug 'L3MON4D3/LuaSnip' 
+
+    "LSP Server Enhancement
+    Plug 'simrat39/rust-tools.nvim'    
+    Plug 'akinsho/flutter-tools.nvim'
+
     "Colorscheme/UI
     Plug 'romainl/Apprentice', { 'branch': 'fancylines-and-neovim' }
     Plug 'vim-airline/vim-airline'
@@ -60,17 +73,9 @@ if has('nvim')
     Plug 'lervag/vimtex'
     Plug 'rust-lang/rust.vim'
     Plug 'fatih/vim-go' , { 'do': ':GoUpdateBinaries' }
-    " Plug 'arakashic/chromatica.nvim', { 'do': ':UpdateRemotePlugins' }
     Plug 'octol/vim-cpp-enhanced-highlight'
     Plug 'elixir-editors/vim-elixir'
 
-    "Linting/Autocomplete
-    Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-    Plug 'dense-analysis/ale'
-
-    " Snippets
-    " Plug 'SirVer/ultisnips'
-    Plug 'honza/vim-snippets'
 
     "Formating
     Plug 'rhysd/vim-clang-format'
@@ -140,88 +145,14 @@ if has('nvim')
 
     augroup filtypeComments 
       autocmd!
-      autocmd FIleType racket setlocal commentstring=;\ %s
+      autocmd FileType racket setlocal commentstring=;\ %s
+      autocmd FileType c,cpp setlocal commentstring=//\ %s
     augroup END
 
     " augroup schemeBase 
     "   autocmd!
     "   autocmd FileType lisp,clojure,scheme,racket,rust RainbowParentheses
     "   autocmd FIleType racket setlocal commentstring=;\ %s
-    " augroup END
-
-    "ALE
-    let g:ale_cursor_detail = 1 
-    let g:ale_floating_preview = 1 
-    let g:ale_echo_msg_format = '(%linter%) %s'
-    let g:ale_linters = {
-    \           'c': ['clang', 'gcc',  'ccls'],
-    \           'cpp': ['clang++', 'g++', 'ccls']
-    \}
-    let g:ale_c_cc_options = '-Wall -Wextra -Wpedantic -std=c17'
-    let g:ale_c_gcc_options = '-Wall -Wextra -Wpedantic -std=c17'
-    let g:ale_c_clang_options = '-Wall -Wextra -Wpedantic -std=c17'
-    let g:ale_cpp_cc_options = '-Wall -Wextra -Wpedantic -std=c++17'
-    let g:ale_cpp_gcc_options = '-Wall -Wextra -Wpedantic -std=c++17'
-    let g:ale_cpp_clang_options = '-Wall -Wextra -Wpedantic -std=c++17'
-    let g:ale_pattern_options = {
-    \           'cs4500project': {
-    \               'ale_cpp_gcc_options': '-Wall -Wextra -Wpedantic -std=c++17',
-    \               'ale_cpp_clang_options': '-Wall -Wextra -Wpedantic -std=c++17',
-    \               'ale_c_gcc_options': '-std=c17 -Wall -Wextra -Wpedantic',
-    \               'ale_c_clang_options': '-std=c17 -Wall -Wextra -Wpedantic',
-    \           },
-    \           'BLEBeacon': {
-    \               'ale_c_cc_options': '-std=c17 -Wall -Wextra -Wpedantic -I/home/neil/school/capstone/BLEBeacon/nRF5_SDK_17.0.2_d674dde/components/libraries/util/ -I/home/neil/school/capstone/BLEBeacon/s132_nrf52_7.2.0/s132_nrf52_7.2.0_API/include -I/home/neil/school/capstone/BLEBeacon/nRF5_SDK_17.0.2_d674dde/components/libraries/bsp/',
-    \               'ale_c_gcc_options': '-std=c17 -Wall -Wextra -Wpedantic -I/home/neil/school/capstone/BLEBeacon/nRF5_SDK_17.0.2_d674dde/components/libraries/util/ -I/home/neil/school/capstone/BLEBeacon/s132_nrf52_7.2.0/s132_nrf52_7.2.0_API/include -I/home/neil/school/capstone/BLEBeacon/nRF5_SDK_17.0.2_d674dde/components/libraries/bsp/',
-    \               'ale_c_clang_options': '-std=c17 -Wall -Wextra -Wpedantic -I/home/neil/school/capstone/BLEBeacon/nRF5_SDK_17.0.2_d674dde/components/libraries/util/ -I/home/neil/school/capstone/BLEBeacon/s132_nrf52_7.2.0/s132_nrf52_7.2.0_API/include -I/home/neil/school/capstone/BLEBeacon/nRF5_SDK_17.0.2_d674dde/components/libraries/bsp/'
-    \           },
-    \           'CapstoneDeviceProgram': {
-    \               'ale_c_cc_options': '-std=gnu17 -Wall -Wextra -Wpedantic -I/home/neil/school/capstone/CapstoneDeviceProgram/include -I/home/neil/school/capstone/pigpio -I/home/neil/school/capstone/CapstoneDeviceProgram/lib/mercuryapi-1.31.4.35/c/src/api',
-    \               'ale_c_gcc_options': '-std=gnu17 -Wall -Wextra -Wpedantic -I/home/neil/school/capstone/CapstoneDeviceProgram/include -I/home/neil/school/capstone/pigpio -I/home/neil/school/capstone/CapstoneDeviceProgram/lib/mercuryapi-1.31.4.35/c/src/api',
-    \               'ale_c_clang_options': '-std=gnu17 -Wall -Wextra -Wpedantic -I/home/neil/school/capstone/CapstoneDeviceProgram/include -I/home/neil/school/capstone/pigpio -I/home/neil/school/capstone/CapstoneDeviceProgram/lib/mercuryapi-1.31.4.35/c/src/api'
-    \           },
-    \           'school/mpd': {
-    \               'ale_c_cc_options': '-std=c89 -Wall -Wextra -Wpedantic -I/home/neil/school/eece4534/linux-4.19-zed/include',
-    \               'ale_c_gcc_options': '-std=c89 -Wall -Wextra -Wpedantic -I/home/neil/school/eece4534/linux-4.19-zed/include',
-    \               'ale_c_clang_options': '-std=c89 -Wall -Wextra -Wpedantic -I/home/neil/school/eece4534/linux-4.19-zed/include',
-    \           },
-    \           'sp21-project-projectgroup1': {
-    \               'ale_cpp_gcc_options': '-std=c++17 -Wall -Wextra -Wpedantic',
-    \               'ale_cpp_clang_options': '-std=c++17 -Wall -Wextra -Wpedantic',
-    \               'ale_cpp_cc_options': '-std=c++17 -Wall -Wextra -Wpedantic',
-    \               'ale_c_gcc_options': '-std=c17 -Wall -Wextra -Wpedantic',
-    \               'ale_c_clang_options': '-std=c17 -Wall -Wextra -Wpedantic',
-    \               'ale_c_cc_options': '-std=c17 -Wall -Wextra -Wpedantic',
-    \           },
-    \}
-    let g:ale_pattern_options_enabled = 1
-    " set up airline to work with ale
-    let g:airline#extensions#ale#enabled = 1
-    " show all errors
-    " let g:ale_open_list = 1
-    " let g:ale_list_window_size = 5
-    " explicitly lint on save
-    let g:ale_lint_on_save = 1
-    "keep sign gutter open
-    let g:ale_sign_column_always = 1
-    "Use different modes depending on if the laptop is running
-    "on battery or not
-
-    let g:ale_lint_on_text_changed = 'never'
-    let g:ale_lint_on_insert_leave = 0
-    " Use arrow keys to go through errors
-    nmap <silent> <Up> <Plug>(ale_previous_wrap)
-    nmap <silent> <Down> <Plug>(ale_next_wrap)
-
-    " Chromatica
-    " let g:chromatica#highlight_feature_level = 1
-    " let g:chromatica#responsive_mode = 1
-    " Fix missing include on linux
-    " let g:chromatica#global_args = ['-isystem/usr/lib/clang/9.0.1/include']
-
-    " augroup chromatica
-    "         autocmd!
-    "         autocmd FileType c,cpp,objc,objcpp ChromaticaStart
     " augroup END
 
     " CPP Enhanced highlighting
@@ -233,159 +164,148 @@ if has('nvim')
     let g:cpp_concepts_highlight = 1
 
     " CoC settings
-    " TextEdit might fail if hidden is not set.
-    set hidden
+    " " TextEdit might fail if hidden is not set.
+    " set hidden
 
-    " Some servers have issues with backup files, see #649.
-    set nobackup
-    set nowritebackup
+    " " Some servers have issues with backup files, see #649.
+    " set nobackup
+    " set nowritebackup
 
-    " Give more space for displaying messages.
-    set cmdheight=2
+    " " Don't pass messages to |ins-completion-menu|.
+    " set shortmess+=c
 
-    " Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-    " delays and poor user experience.
-    set updatetime=300
+    " " Use tab for trigger completion with characters ahead and navigate.
+    " " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+    " " other plugin before putting this into your config.
+    " inoremap <silent><expr> <TAB>
+    "       \ pumvisible() ? "\<C-n>" :
+    "       \ <SID>check_back_space() ? "\<TAB>" :
+    "       \ coc#refresh()
+    " inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-    " Don't pass messages to |ins-completion-menu|.
-    set shortmess+=c
+    " function! s:check_back_space() abort
+    "   let col = col('.') - 1
+    "   return !col || getline('.')[col - 1]  =~# '\s'
+    " endfunction
 
-    " Always show the signcolumn, otherwise it would shift the text each time
-    " diagnostics appear/become resolved.
-    set signcolumn=yes
+    " " Use <c-space> to trigger completion.
+    " inoremap <silent><expr> <c-space> coc#refresh()
 
-    " Use tab for trigger completion with characters ahead and navigate.
-    " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-    " other plugin before putting this into your config.
-    inoremap <silent><expr> <TAB>
-          \ pumvisible() ? "\<C-n>" :
-          \ <SID>check_back_space() ? "\<TAB>" :
-          \ coc#refresh()
-    inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+    " " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+    " " position. Coc only does snippet and additional edit on confirm.
+    " if has('patch8.1.1068')
+    "   " Use `complete_info` if your (Neo)Vim version supports it.
+    "   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+    " else
+    "   imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+    " endif
 
-    function! s:check_back_space() abort
-      let col = col('.') - 1
-      return !col || getline('.')[col - 1]  =~# '\s'
-    endfunction
+    " " Use `[g` and `]g` to navigate diagnostics
+    " nmap <silent> [g <Plug>(coc-diagnostic-prev)
+    " nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
-    " Use <c-space> to trigger completion.
-    inoremap <silent><expr> <c-space> coc#refresh()
+    " " GoTo code navigation.
+    " nmap <silent> gd <Plug>(coc-definition)
+    " nmap <silent> gy <Plug>(coc-type-definition)
+    " nmap <silent> gi <Plug>(coc-implementation)
+    " nmap <silent> gr <Plug>(coc-references)
 
-    " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-    " position. Coc only does snippet and additional edit on confirm.
-    if has('patch8.1.1068')
-      " Use `complete_info` if your (Neo)Vim version supports it.
-      inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-    else
-      imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-    endif
+    " " Use K to show documentation in preview window.
+    " nnoremap <silent> K :call <SID>show_documentation()<CR>
 
-    " Use `[g` and `]g` to navigate diagnostics
-    nmap <silent> [g <Plug>(coc-diagnostic-prev)
-    nmap <silent> ]g <Plug>(coc-diagnostic-next)
+    " function! s:show_documentation()
+    "   if (index(['vim','help'], &filetype) >= 0)
+    "     execute 'h '.expand('<cword>')
+    "   else
+    "     call CocAction('doHover')
+    "   endif
+    " endfunction
 
-    " GoTo code navigation.
-    nmap <silent> gd <Plug>(coc-definition)
-    nmap <silent> gy <Plug>(coc-type-definition)
-    nmap <silent> gi <Plug>(coc-implementation)
-    nmap <silent> gr <Plug>(coc-references)
+    " " Highlight the symbol and its references when holding the cursor.
+    " autocmd CursorHold * silent call CocActionAsync('highlight')
 
-    " Use K to show documentation in preview window.
-    nnoremap <silent> K :call <SID>show_documentation()<CR>
+    " " Symbol renaming.
+    " nmap <leader>rn <Plug>(coc-rename)
 
-    function! s:show_documentation()
-      if (index(['vim','help'], &filetype) >= 0)
-        execute 'h '.expand('<cword>')
-      else
-        call CocAction('doHover')
-      endif
-    endfunction
+    " " Formatting selected code.
+    " xmap <leader>j  <Plug>(coc-format-selected)
+    " nmap <leader>j  <Plug>(coc-format-selected)
 
-    " Highlight the symbol and its references when holding the cursor.
-    autocmd CursorHold * silent call CocActionAsync('highlight')
+    " augroup mygroup
+    "   autocmd!
+    "   " Setup formatexpr specified filetype(s).
+    "   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+    "   " Update signature help on jump placeholder.
+    "   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+    " augroup end
 
-    " Symbol renaming.
-    nmap <leader>rn <Plug>(coc-rename)
+    " " Applying codeAction to the selected region.
+    " " Example: `<leader>aap` for current paragraph
+    " xmap <leader>a  <Plug>(coc-codeaction-selected)
+    " nmap <leader>a  <Plug>(coc-codeaction-selected)
 
-    " Formatting selected code.
-    xmap <leader>j  <Plug>(coc-format-selected)
-    nmap <leader>j  <Plug>(coc-format-selected)
+    " " Remap keys for applying codeAction to the current line.
+    " nmap <leader>ac  <Plug>(coc-codeaction)
+    " " Apply AutoFix to problem on the current line.
+    " nmap <leader>qf  <Plug>(coc-fix-current)
 
-    augroup mygroup
-      autocmd!
-      " Setup formatexpr specified filetype(s).
-      autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-      " Update signature help on jump placeholder.
-      autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-    augroup end
+    " " Introduce function text object
+    " " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+    " xmap if <Plug>(coc-funcobj-i)
+    " xmap af <Plug>(coc-funcobj-a)
+    " omap if <Plug>(coc-funcobj-i)
+    " omap af <Plug>(coc-funcobj-a)
 
-    " Applying codeAction to the selected region.
-    " Example: `<leader>aap` for current paragraph
-    xmap <leader>a  <Plug>(coc-codeaction-selected)
-    nmap <leader>a  <Plug>(coc-codeaction-selected)
+    " " Use <TAB> for selections ranges.
+    " " NOTE: Requires 'textDocument/selectionRange' support from the language server.
+    " " coc-tsserver, coc-python are the examples of servers that support it.
+    " nmap <silent> <TAB> <Plug>(coc-range-select)
+    " xmap <silent> <TAB> <Plug>(coc-range-select)
 
-    " Remap keys for applying codeAction to the current line.
-    nmap <leader>ac  <Plug>(coc-codeaction)
-    " Apply AutoFix to problem on the current line.
-    nmap <leader>qf  <Plug>(coc-fix-current)
+    " " Add `:Format` command to format current buffer.
+    " command! -nargs=0 Format :call CocAction('format')
 
-    " Introduce function text object
-    " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-    xmap if <Plug>(coc-funcobj-i)
-    xmap af <Plug>(coc-funcobj-a)
-    omap if <Plug>(coc-funcobj-i)
-    omap af <Plug>(coc-funcobj-a)
+    " " Add `:Fold` command to fold current buffer.
+    " command! -nargs=? Fold :call     CocAction('fold', <f-args>)
 
-    " Use <TAB> for selections ranges.
-    " NOTE: Requires 'textDocument/selectionRange' support from the language server.
-    " coc-tsserver, coc-python are the examples of servers that support it.
-    nmap <silent> <TAB> <Plug>(coc-range-select)
-    xmap <silent> <TAB> <Plug>(coc-range-select)
+    " " Add `:OR` command for organize imports of the current buffer.
+    " command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+    " " Airline integration
+    " let g:airline#extensions#coc#enabled = 1
 
-    " Add `:Format` command to format current buffer.
-    command! -nargs=0 Format :call CocAction('format')
+    " "" Mappings using CoCList:
+    " " Show all diagnostics.
+    " nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+    " " Manage extensions.
+    " nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+    " " Show commands.
+    " nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+    " " Find symbol of current document.
+    " nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+    " " Search workspace symbols.
+    " nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+    " " Do default action for next item.
+    " nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+    " " Do default action for previous item.
+    " nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+    " " Resume latest coc list.
+    " nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
-    " Add `:Fold` command to fold current buffer.
-    command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+    " " CoC Snippets
+    " " Use <C-l> for trigger snippet expand.
+    " imap <C-l> <Plug>(coc-snippets-expand)
 
-    " Add `:OR` command for organize imports of the current buffer.
-    command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-    " Airline integration
-    let g:airline#extensions#coc#enabled = 1
+    " " Use <C-j> for select text for visual placeholder of snippet.
+    " vmap <C-j> <Plug>(coc-snippets-select)
 
-    "" Mappings using CoCList:
-    " Show all diagnostics.
-    nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-    " Manage extensions.
-    nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-    " Show commands.
-    nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-    " Find symbol of current document.
-    nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-    " Search workspace symbols.
-    nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-    " Do default action for next item.
-    nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-    " Do default action for previous item.
-    nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-    " Resume latest coc list.
-    nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+    " " Use <C-j> for jump to next placeholder, it's default of coc.nvim
+    " let g:coc_snippet_next = '<c-j>'
 
-    " CoC Snippets
-    " Use <C-l> for trigger snippet expand.
-    imap <C-l> <Plug>(coc-snippets-expand)
+    " " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
+    " let g:coc_snippet_prev = '<c-k>'
 
-    " Use <C-j> for select text for visual placeholder of snippet.
-    vmap <C-j> <Plug>(coc-snippets-select)
-
-    " Use <C-j> for jump to next placeholder, it's default of coc.nvim
-    let g:coc_snippet_next = '<c-j>'
-
-    " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-    let g:coc_snippet_prev = '<c-k>'
-
-    " Use <C-j> for both expand and jump (make expand higher priority.)
-    imap <C-j> <Plug>(coc-snippets-expand-jump)
+    " " Use <C-j> for both expand and jump (make expand higher priority.)
+    " imap <C-j> <Plug>(coc-snippets-expand-jump)
 
     "FZF
     " Default fzf layout
@@ -451,6 +371,12 @@ if has('nvim')
 endif
 "}}}
 
+"{{{Lua
+if has('nvim')
+    luafile ~/.config/nvim/settings.lua
+endif
+"}}}
+
 "GUI and Random Stuff {{{
 
 "Backspace acts correctly
@@ -479,6 +405,16 @@ set undofile
 "Highlight 80 columns
 set colorcolumn=80
 
+" Give more space for displaying messages.
+set cmdheight=2
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+set signcolumn=yes
 "}}}
 
 "Colors {{{
