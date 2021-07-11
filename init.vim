@@ -3,13 +3,19 @@ if !has("nvim")
     set nocompatible
     syntax enable
     filetype plugin indent on
+
     set autoindent
     set autoread
     set backspace=indent,eol,start
+    set belloff=all
+    set backupdir=~/.vim/backup
     set complete-=i
+    set cscopeverbose
+    set directory=~/.vim/swap
     set display=lastline
     set encoding=utf-8
     set formatoptions=tcqj
+    set nofsync
     set history=10000
     set hlsearch
     set incsearch
@@ -17,15 +23,23 @@ if !has("nvim")
     set laststatus=2
     set listchars=tab:>\ ,trail:-,nbsp:+
     set mouse=a
-    set nrformats=hex
+    set nrformats=bin,hex
+    set sessionoptions+=unix,slash
     set sessionoptions-=options
+    set shortmess+=F
+    set shortmess-=S
+    set showcmd
+    set sidescroll=1
     set smarttab
+    set nostartofline
     set tabpagemax=50
     set tags=./tags;,tags
+    set ttimeoutlen=50
     set ttyfast
+    set viewoptions+=unix,slash
+    set undodir=~/.vim/undo-dir
     set viminfo+=!
     set wildmenu
-    set undodir=~/.vim/undo-dir
 endif
 " }}}
 
@@ -76,9 +90,8 @@ if has('nvim')
     Plug 'octol/vim-cpp-enhanced-highlight'
     Plug 'elixir-editors/vim-elixir'
 
-
     "Formating
-    Plug 'rhysd/vim-clang-format'
+    " Plug 'rhysd/vim-clang-format'
 
     "File Navigation
     Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -164,9 +177,6 @@ if has('nvim')
     let g:cpp_concepts_highlight = 1
 
     " CoC settings
-    " " TextEdit might fail if hidden is not set.
-    " set hidden
-
     " " Some servers have issues with backup files, see #649.
     " set nobackup
     " set nowritebackup
@@ -413,15 +423,15 @@ set cmdheight=2
 set updatetime=300
 
 " Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-set signcolumn=yes
+" diagnostics appear/become resolved. Only bother for nvim cause plugins
+if has('nvim')
+    set signcolumn=yes
+endif
 "}}}
 
 "Colors {{{
 ""Enable 256 colors in console
 set t_Co=256
-"set t_AB=^[[48;5;%dm
-"set t_AF=^[[38;5;%dm
 
 "Colorscheme
 colorscheme apprentice 
@@ -445,12 +455,6 @@ function SetCLanguagesFormat()
     setlocal softtabstop=2
     setlocal shiftwidth=2
 endfunction
-
-" augroup c_cpp_format
-"     autocmd!
-"     autocmd FileType c,cpp call SetCLanguagesFormat()
-" augroup END
-
 "}}}
 
 "UI Config {{{
@@ -508,29 +512,28 @@ nnoremap gV '[v']
 "}}}
 
 "Leader Shortcuts {{{
-" NERDTree
-nnoremap <leader>n :NERDTreeToggle<CR>
+"Only bother for nvim cause plugins
+if has('nvim')
+    " NERDTree
+    nnoremap <leader>n :NERDTreeToggle<CR>
 
-"toggle vim-obsess
-nnoremap <leader>s :Obsess<CR>
+    "toggle vim-obsess
+    nnoremap <leader>s :Obsess<CR>
 
-"turn off search highlight
-nnoremap <leader><space> :nohlsearch<CR>
+    "turn off search highlight
+    nnoremap <leader><space> :nohlsearch<CR>
 
-"Open FZF Files
-nnoremap <leader>f :Files<CR>
+    "Open FZF Files
+    nnoremap <leader>f :Files<CR>
 
-"Open fzf buffer search
-nnoremap <leader>b :Buffers<CR>
+    "Open fzf buffer search
+    nnoremap <leader>b :Buffers<CR>
 
-"open fzf tags search
-nnoremap <leader>t :Tags<CR>
-"Open undo tree
-nnoremap <leader>u :MundoToggle<cr>
-
-" Ale next and previous error
-nnoremap <leader>e :<Plug>(ale_next_wrap)
-nnoremap <leader>w :<Plug>(ale_previous_wrap)
+    "open fzf tags search
+    nnoremap <leader>t :Tags<CR>
+    "Open undo tree
+    nnoremap <leader>u :MundoToggle<cr>
+endif
 
 "}}}
 
@@ -542,12 +545,6 @@ nnoremap <leader>w :<Plug>(ale_previous_wrap)
 if has('nvim')
     :tnoremap <Esc> <C-\><C-n>
 endif
-"}}}
-
-"{{{ Tags
-"Set tag directory to same directory as the file
-set tags=./tags
-
 "}}}
 
 "fold all sections in .vimrc by default
