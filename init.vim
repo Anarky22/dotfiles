@@ -94,7 +94,7 @@ if has('nvim')
     " Plug 'rhysd/vim-clang-format'
 
     "File Navigation
-    Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+    Plug '/usr/local/opt/fzf' 
     Plug 'junegunn/fzf.vim'
 
     "Minor helpful plugins
@@ -351,13 +351,16 @@ if has('nvim')
     imap <c-x><c-l> <plug>(fzf-complete-line)
 
 
-    "WIP
     "set clang formmating options
     " let g:clang_format#style_options = {
-    "                         \ 'AccessModifierOffset' : -4,
-    "                         \ 'AllowShortIfStatementsOnASingleLine' : "true",
-    "                         \ 'AlwaysBreakTemplateDeclarations' : "true",
-    "                         \ 'Standard' : "C++17" }
+    "                         \ 'BasedOnStyle': 'LLVM'
+    "                         \ 'IndentWidth': 4,
+    "                         \ 'DerivePointerAlignment': 'false',
+    "                         \ 'PointerAlignment': 'left',
+    "                         \ 'AccessModifierOffset': -4,
+    "                         \ 'AllowShortIfStatementsOnASingleLine': "false",
+    "                         \ 'AlwaysBreakTemplateDeclarations': "true",
+    "                         \ 'Standard': "C++11" }
     "autoformat code on save
     " let g:clang_format#auto_format = 1
 
@@ -412,8 +415,8 @@ set hidden
 "Persistant Undo - Maintain undo history between sessions
 set undofile
 
-"Highlight 80 columns
-set colorcolumn=80
+"Highlight 100 columns
+set colorcolumn=100
 
 " Give more space for displaying messages.
 set cmdheight=2
@@ -533,6 +536,9 @@ if has('nvim')
     nnoremap <leader>t :Tags<CR>
     "Open undo tree
     nnoremap <leader>u :MundoToggle<cr>
+
+    "Strip trailing whitespace
+    nnoremap <leader>w :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 endif
 
 "}}}
