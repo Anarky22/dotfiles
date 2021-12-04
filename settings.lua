@@ -2,7 +2,6 @@
 require('nvim-treesitter.configs').setup {
     highlight = {
         enable = true,
-        disable = { "c", "cpp" },
     },
 }
 
@@ -71,21 +70,33 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 -- LSP settings
 
 -- CCLS
-nvim_lsp.ccls.setup {
+-- nvim_lsp.ccls.setup {
+--     on_attach = on_attach,
+--     flags = {
+--         debounce_text_changes = 150,
+--     },
+--     cmd = { "ccls" },
+--     filetypes = { "c", "cpp", "objc", "objcpp", "h", "hpp", "ino", "arduino"},
+--     root_dir = function(fname)
+--         return util.root_pattern(".ccls", "compile_commands.json", "compile_flags.txt", ".git", ".hg")(fname) or util.path.dirname(fname)
+--     end,
+--     init_options = {
+--         cache = {
+--             directory = "/tmp/ccls",
+--         },
+--     },
+-- };
+
+-- Clangd
+nvim_lsp.clangd.setup {
     on_attach = on_attach,
     flags = {
         debounce_text_changes = 150,
     },
-    cmd = { "ccls" },
     filetypes = { "c", "cpp", "objc", "objcpp", "h", "hpp", "ino", "arduino"},
     root_dir = function(fname)
-        return util.root_pattern(".ccls", "compile_commands.json", "compile_flags.txt", ".git", ".hg")(fname) or util.path.dirname(fname)
+        return util.root_pattern("compile_commands.json", "compile_flags.txt", ".git", ".hg")(fname) or util.path.dirname(fname)
     end,
-    init_options = {
-        cache = {
-            directory = "/tmp/ccls",
-        },
-    },
 };
 
 -- Pyright
