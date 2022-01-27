@@ -35,8 +35,8 @@ local on_attach = function(client, bufnr)
     buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
 
     -- Diagnostics navigation
-    buf_set_keymap('n', '[g', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-    buf_set_keymap('n', ']g', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+    buf_set_keymap('n', '[g', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
+    buf_set_keymap('n', ']g', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
 
     -- Show docs in preview window
     buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
@@ -58,8 +58,8 @@ local on_attach = function(client, bufnr)
     -- Code action
     buf_set_keymap('n', '<leader>a', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
 
-    buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-    buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
+    buf_set_keymap('n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
+    buf_set_keymap('n', '<leader>q', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
 
 end
 
@@ -98,6 +98,11 @@ nvim_lsp.clangd.setup {
         return util.root_pattern("compile_commands.json", "compile_flags.txt", ".git", ".hg")(fname) or util.path.dirname(fname)
     end,
 };
+
+
+-- NOTE: using nvim-jdtls, which launchs the internal LSP seperately, and is configured in ftplugin
+-- JDTLS
+--nvim_lsp.jdtls.setup {};
 
 -- Pyright
 nvim_lsp.pyright.setup{
