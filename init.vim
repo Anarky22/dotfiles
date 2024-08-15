@@ -60,6 +60,7 @@ if has('nvim')
     "Linting/Autocomplete
     Plug 'neovim/nvim-lspconfig'
     Plug 'hrsh7th/nvim-compe'
+    Plug 'mfussenegger/nvim-jdtls'
     " Plug 'neoclide/coc.nvim', { 'branch': 'release' }
     
     "Snippets
@@ -453,7 +454,13 @@ augroup maketab
     autocmd FileType make setlocal noexpandtab
 augroup END
 
-function SetCLanguagesFormat()
+" In dart use 2 spaces
+augroup twoSpace
+    autocmd!
+    autocmd FileType dart call SetTwoSpaceFormat()
+augroup END
+
+function SetTwoSpaceFormat()
     setlocal tabstop=2
     setlocal softtabstop=2
     setlocal shiftwidth=2

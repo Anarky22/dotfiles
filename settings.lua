@@ -1,5 +1,6 @@
 -- Treesitter
 require('nvim-treesitter.configs').setup {
+    auto_install = true,
     highlight = {
         enable = true,
     },
@@ -89,6 +90,7 @@ capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 -- Clangd
 nvim_lsp.clangd.setup {
+    -- cmd = {"/Users/nresnik/AndroidSDK/ndk/24.0.8215888/toolchains/llvm/prebuilt/darwin-x86_64/bin/clangd"},
     on_attach = on_attach,
     flags = {
         debounce_text_changes = 150,
@@ -99,6 +101,19 @@ nvim_lsp.clangd.setup {
     end,
 };
 
+-- Flutter Tools
+require('flutter-tools').setup{
+    lsp = {
+        on_attach = on_attach,
+        flags = {
+            debounce_text_changes = 150,
+        },
+    },
+    flutter_path = "/Users/nresnik/flutter/2.0.1-stable/bin/flutter",
+    debugger = {
+        enabled = false,
+    },
+}
 
 -- NOTE: using nvim-jdtls, which launchs the internal LSP seperately, and is configured in ftplugin
 -- JDTLS
@@ -125,7 +140,7 @@ require('rust-tools').setup{
         -- whether to show hover actions inside the hover window
         -- this overrides the default hover handler so something like lspsaga.nvim's hover would be overriden by this
         -- default: true
-        hover_with_actions = true,
+        -- hover_with_actions = true,
 
         -- These apply to the default RustRunnables command
         runnables = {
@@ -191,17 +206,12 @@ require('rust-tools').setup{
     },
 }
 
--- Flutter Tools
-require('flutter-tools').setup{
-    lsp = {
-        on_attach = on_attach,
-        flags = {
-            debounce_text_changes = 150,
-        },
-    },
-    flutter_path = "/Users/nresnik/flutter/2.0.1-stable/bin/flutter",
-    debugger = {
-        enabled = false,
+-- Sourcekit (Swift)
+nvim_lsp.sourcekit.setup{
+    on_attach = on_attach,
+    filetypes = {"swift"},
+    flags = {
+        debounce_text_changes = 150,
     },
 }
 
