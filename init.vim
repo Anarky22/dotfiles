@@ -53,60 +53,54 @@ if has('nvim')
     "Dependancies
     Plug 'nvim-lua/plenary.nvim'
     Plug 'nvim-lua/popup.nvim'
+    Plug 'nvim-telescope/telescope.nvim', { 'branch': '0.1.x' }       
+    Plug 'MeanderingProgramer/render-markdown.nvim'
     
     "Treesitter
     Plug 'nvim-treesitter/nvim-treesitter', { 'do': 'TSUpdate' }    
+    Plug 'nvim-treesitter/nvim-treesitter-context'
+    " Plug 'nvim-treesitter/nvim-treesitter-refactor'
 
     "Linting/Autocomplete
     Plug 'neovim/nvim-lspconfig'
-    Plug 'hrsh7th/nvim-compe'
-    Plug 'mfussenegger/nvim-jdtls'
-    " Plug 'neoclide/coc.nvim', { 'branch': 'release' }
     
-    "Snippets
-    Plug 'L3MON4D3/LuaSnip' 
+    " CiderLSP
+    Plug 'hrsh7th/cmp-buffer'
+    Plug 'hrsh7th/cmp-nvim-lsp'
+    Plug 'hrsh7th/cmp-nvim-lua'
+    Plug 'hrsh7th/cmp-path'
+    Plug 'hrsh7th/cmp-vsnip'
+    Plug 'hrsh7th/nvim-cmp'
+    Plug 'hrsh7th/vim-vsnip'
+    Plug 'neovim/nvim-lspconfig'
+    Plug 'onsails/lspkind.nvim'
 
-    "LSP Server Enhancement
-    Plug 'simrat39/rust-tools.nvim'    
-    Plug 'akinsho/flutter-tools.nvim'
+    " Diagnostics
+    Plug 'kyazdani42/nvim-web-devicons'
+    Plug 'folke/trouble.nvim'
 
     "Colorscheme/UI
     Plug 'romainl/Apprentice', { 'branch': 'fancylines-and-neovim' }
     Plug 'vim-airline/vim-airline'
-    " Plug 'vim-airline/vim-airline-themes'
-    " Plug 'bling/vim-bufferline'
     Plug 'junegunn/rainbow_parentheses.vim'
     Plug 'simnalamburt/vim-mundo'
     Plug 'preservim/nerdtree'
     Plug 'Xuyuanp/nerdtree-git-plugin'
+    Plug 'lukas-reineke/indent-blankline.nvim'
 
     "Language Specific
-    Plug 'wlangstroth/vim-racket'
-    Plug 'pangloss/vim-javascript'
-    Plug 'mxw/vim-jsx'
-    Plug 'tweekmonster/django-plus.vim'
-    Plug 'lervag/vimtex'
-    Plug 'rust-lang/rust.vim'
-    Plug 'fatih/vim-go' , { 'do': ':GoUpdateBinaries' }
     Plug 'octol/vim-cpp-enhanced-highlight'
-    Plug 'elixir-editors/vim-elixir'
-
-    "Formating
-    " Plug 'rhysd/vim-clang-format'
+    Plug 'smartpde/tree-sitter-cpp-google'
 
     "File Navigation
-    Plug '/usr/local/opt/fzf' 
+    Plug 'junegunn/fzf'
     Plug 'junegunn/fzf.vim'
 
     "Minor helpful plugins
-    "Git within vim
-    Plug 'tpope/vim-fugitive'
-    "Tags
-    " Plug 'ludovicchabant/vim-gutentags'
     "Session management
-    Plug 'tpope/vim-obsession'
+    "Plug 'tpope/vim-obsession'
     "Async build/test dispatcher
-    Plug 'tpope/vim-dispatch'
+    "Plug 'tpope/vim-dispatch'
     "sugar for unix shell commands in linux
     Plug 'tpope/vim-eunuch'
     "Comment stuff out
@@ -115,11 +109,35 @@ if has('nvim')
     Plug 'tpope/vim-surround'
     "Insert/delete brackets, parens, quotes, in pair
     Plug 'jiangmiao/auto-pairs'
+    "devicons
+    Plug 'kyazdani42/nvim-web-devicons'
+    "devicons
+    Plug 'kyazdani42/nvim-web-devicons'
     "Adds support for plugin maps to .
     Plug 'tpope/vim-repeat'
 
+    "Google specific
+    "Plug 'google/vim-maktaba'   
+    "Plug 'google/vim-codefmt'   
+    "Plug 'google/vim-glaive'   
+
+    Plug 'sso://user/jackcogdill/nvim-figtree' 
+    Plug 'sso://user/fentanes/googlepaths.nvim'
+    Plug 'sso://googler@user/piloto/cmp-nvim-ciderlsp'
+    Plug 'sso://user/vintharas/telescope-codesearch.nvim'
+    Plug 'sso://user/idk/cider-agent.nvim'
+
     "Initialize plugins
     call plug#end()
+
+    " Glug - Google Specific
+    source /usr/share/vim/google/glug/bootstrap.vim
+
+    Glug ft-soy
+    Glug codefmt
+    Glug codefmt-google
+    Glug blaze
+    Glug blazedeps plugin[mappings]
 endif
 " }}}
 
@@ -177,194 +195,6 @@ if has('nvim')
     let g:cpp_experimental_simple_template_highlight = 1
     let g:cpp_concepts_highlight = 1
 
-    " CoC settings
-    " " Some servers have issues with backup files, see #649.
-    " set nobackup
-    " set nowritebackup
-
-    " " Don't pass messages to |ins-completion-menu|.
-    " set shortmess+=c
-
-    " " Use tab for trigger completion with characters ahead and navigate.
-    " " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-    " " other plugin before putting this into your config.
-    " inoremap <silent><expr> <TAB>
-    "       \ pumvisible() ? "\<C-n>" :
-    "       \ <SID>check_back_space() ? "\<TAB>" :
-    "       \ coc#refresh()
-    " inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-    " function! s:check_back_space() abort
-    "   let col = col('.') - 1
-    "   return !col || getline('.')[col - 1]  =~# '\s'
-    " endfunction
-
-    " " Use <c-space> to trigger completion.
-    " inoremap <silent><expr> <c-space> coc#refresh()
-
-    " " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-    " " position. Coc only does snippet and additional edit on confirm.
-    " if has('patch8.1.1068')
-    "   " Use `complete_info` if your (Neo)Vim version supports it.
-    "   inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-    " else
-    "   imap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-    " endif
-
-    " " Use `[g` and `]g` to navigate diagnostics
-    " nmap <silent> [g <Plug>(coc-diagnostic-prev)
-    " nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-    " " GoTo code navigation.
-    " nmap <silent> gd <Plug>(coc-definition)
-    " nmap <silent> gy <Plug>(coc-type-definition)
-    " nmap <silent> gi <Plug>(coc-implementation)
-    " nmap <silent> gr <Plug>(coc-references)
-
-    " " Use K to show documentation in preview window.
-    " nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-    " function! s:show_documentation()
-    "   if (index(['vim','help'], &filetype) >= 0)
-    "     execute 'h '.expand('<cword>')
-    "   else
-    "     call CocAction('doHover')
-    "   endif
-    " endfunction
-
-    " " Highlight the symbol and its references when holding the cursor.
-    " autocmd CursorHold * silent call CocActionAsync('highlight')
-
-    " " Symbol renaming.
-    " nmap <leader>rn <Plug>(coc-rename)
-
-    " " Formatting selected code.
-    " xmap <leader>j  <Plug>(coc-format-selected)
-    " nmap <leader>j  <Plug>(coc-format-selected)
-
-    " augroup mygroup
-    "   autocmd!
-    "   " Setup formatexpr specified filetype(s).
-    "   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-    "   " Update signature help on jump placeholder.
-    "   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-    " augroup end
-
-    " " Applying codeAction to the selected region.
-    " " Example: `<leader>aap` for current paragraph
-    " xmap <leader>a  <Plug>(coc-codeaction-selected)
-    " nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-    " " Remap keys for applying codeAction to the current line.
-    " nmap <leader>ac  <Plug>(coc-codeaction)
-    " " Apply AutoFix to problem on the current line.
-    " nmap <leader>qf  <Plug>(coc-fix-current)
-
-    " " Introduce function text object
-    " " NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-    " xmap if <Plug>(coc-funcobj-i)
-    " xmap af <Plug>(coc-funcobj-a)
-    " omap if <Plug>(coc-funcobj-i)
-    " omap af <Plug>(coc-funcobj-a)
-
-    " " Use <TAB> for selections ranges.
-    " " NOTE: Requires 'textDocument/selectionRange' support from the language server.
-    " " coc-tsserver, coc-python are the examples of servers that support it.
-    " nmap <silent> <TAB> <Plug>(coc-range-select)
-    " xmap <silent> <TAB> <Plug>(coc-range-select)
-
-    " " Add `:Format` command to format current buffer.
-    " command! -nargs=0 Format :call CocAction('format')
-
-    " " Add `:Fold` command to fold current buffer.
-    " command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-    " " Add `:OR` command for organize imports of the current buffer.
-    " command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-    " " Airline integration
-    " let g:airline#extensions#coc#enabled = 1
-
-    " "" Mappings using CoCList:
-    " " Show all diagnostics.
-    " nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-    " " Manage extensions.
-    " nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-    " " Show commands.
-    " nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-    " " Find symbol of current document.
-    " nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-    " " Search workspace symbols.
-    " nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-    " " Do default action for next item.
-    " nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-    " " Do default action for previous item.
-    " nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-    " " Resume latest coc list.
-    " nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-
-    " " CoC Snippets
-    " " Use <C-l> for trigger snippet expand.
-    " imap <C-l> <Plug>(coc-snippets-expand)
-
-    " " Use <C-j> for select text for visual placeholder of snippet.
-    " vmap <C-j> <Plug>(coc-snippets-select)
-
-    " " Use <C-j> for jump to next placeholder, it's default of coc.nvim
-    " let g:coc_snippet_next = '<c-j>'
-
-    " " Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-    " let g:coc_snippet_prev = '<c-k>'
-
-    " " Use <C-j> for both expand and jump (make expand higher priority.)
-    " imap <C-j> <Plug>(coc-snippets-expand-jump)
-
-    "FZF
-    " Default fzf layout
-    " - down / up / left / right
-    let g:fzf_layout = { 'down': '~40%' }
-
-    " In Neovim, you can set up fzf window using a Vim command
-    let g:fzf_layout = { 'window': 'enew' }
-    let g:fzf_layout = { 'window': '-tabnew' }
-
-    " Customize fzf colors to match your color scheme
-    let g:fzf_colors =
-    \ { 'fg':      ['fg', 'Normal'],
-      \ 'bg':      ['bg', 'Normal'],
-      \ 'hl':      ['fg', 'Comment'],
-      \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
-      \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
-      \ 'hl+':     ['fg', 'Statement'],
-      \ 'info':    ['fg', 'PreProc'],
-      \ 'prompt':  ['fg', 'Conditional'],
-      \ 'pointer': ['fg', 'Exception'],
-      \ 'marker':  ['fg', 'Keyword'],
-      \ 'spinner': ['fg', 'Label'],
-      \ 'header':  ['fg', 'Comment'] }
-    " [Buffers] Jump to the existing window if possible
-    let g:fzf_buffers_jump = 1
-    " Replace the default dictionary completion with fzf-based fuzzy completion
-    inoremap <expr> <c-x><c-k> fzf#complete('cat /usr/share/dict/words')
-    " Insert mode completion
-    imap <c-x><c-k> <plug>(fzf-complete-word)
-    imap <c-x><c-f> <plug>(fzf-complete-path)
-    imap <c-x><c-j> <plug>(fzf-complete-file-ag)
-    imap <c-x><c-l> <plug>(fzf-complete-line)
-
-
-    "set clang formmating options
-    " let g:clang_format#style_options = {
-    "                         \ 'BasedOnStyle': 'LLVM'
-    "                         \ 'IndentWidth': 4,
-    "                         \ 'DerivePointerAlignment': 'false',
-    "                         \ 'PointerAlignment': 'left',
-    "                         \ 'AccessModifierOffset': -4,
-    "                         \ 'AllowShortIfStatementsOnASingleLine': "false",
-    "                         \ 'AlwaysBreakTemplateDeclarations': "true",
-    "                         \ 'Standard': "C++11" }
-    "autoformat code on save
-    " let g:clang_format#auto_format = 1
-
     "Add vim repeat support to vim surround
     silent! call repeat#set('\vim-surroundmap', v:count)
 
@@ -382,6 +212,26 @@ if has('nvim')
     let g:go_highlight_types = 1
     " let g:go_auto_sameids = 1
     let g:go_fmt_command = "goimports"
+
+  augroup autoformat_settings
+    autocmd FileType borg,gcl,patchpanel AutoFormatBuffer gclfmt
+    autocmd FileType bzl AutoFormatBuffer buildifier
+    autocmd FileType c,cpp AutoFormatBuffer clang-format
+    autocmd FileType dart AutoFormatBuffer dartfmt
+    autocmd FileType go AutoFormatBuffer gofmt
+    autocmd FileType java AutoFormatBuffer google-java-format
+    autocmd FileType javascript,typescript,typescriptreact AutoFormatBuffer google-prettier
+    " autocmd FileType javascriptreact,css,scss,html,json AutoFormatBuffer google-prettier
+    autocmd FileType jslayout AutoFormatBuffer jslfmt
+    autocmd FileType markdown AutoFormatBuffer mdformat
+    autocmd FileType ncl AutoFormatBuffer nclfmt
+    autocmd FileType proto AutoFormatBuffer protofmt
+    autocmd FileType python,piccolo AutoFormatBuffer pyformat
+    autocmd FileType soy AutoFormatBuffer soyfmt
+    autocmd FileType sql AutoFormatBuffer format_sql
+    autocmd FileType textpb AutoFormatBuffer text-proto-format
+  augroup END
+
 endif
 "}}}
 
@@ -417,7 +267,7 @@ set hidden
 set undofile
 
 "Highlight 100 columns
-set colorcolumn=100
+set colorcolumn=80
 
 " Give more space for displaying messages.
 set cmdheight=2
@@ -442,11 +292,11 @@ colorscheme apprentice
 "}}}
 
 "Spaces & Tabs {{{
-set tabstop=4 "number of visual spaces per TAB
-set softtabstop=4 "number of spaces in tab when editing
+set tabstop=2 "number of visual spaces per TAB
+set softtabstop=2 "number of spaces in tab when editing
 set expandtab "tabs are spaces
 set autoindent "keeps indentation same as above line
-set shiftwidth=4 "number of spaces per indent
+set shiftwidth=2 "number of spaces per indent
 
 "In make files use real tabs
 augroup maketab
@@ -455,16 +305,16 @@ augroup maketab
 augroup END
 
 " In dart use 2 spaces
-augroup twoSpace
-    autocmd!
-    autocmd FileType dart call SetTwoSpaceFormat()
-augroup END
+" augroup twoSpace
+"     autocmd!
+"     autocmd FileType dart call SetTwoSpaceFormat()
+" augroup END
 
-function SetTwoSpaceFormat()
-    setlocal tabstop=2
-    setlocal softtabstop=2
-    setlocal shiftwidth=2
-endfunction
+" function SetTwoSpaceFormat()
+"     setlocal tabstop=2
+"     setlocal softtabstop=2
+"     setlocal shiftwidth=2
+" endfunction
 "}}}
 
 "UI Config {{{
@@ -522,31 +372,46 @@ nnoremap gV '[v']
 "}}}
 
 "Leader Shortcuts {{{
+"turn off search highlight
+nnoremap <leader><space> :nohlsearch<CR>
+"Strip trailing whitespace
+nnoremap <leader>w :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
+
 "Only bother for nvim cause plugins
 if has('nvim')
     " NERDTree
     nnoremap <leader>n :NERDTreeToggle<CR>
 
     "toggle vim-obsess
-    nnoremap <leader>s :Obsess<CR>
-
-    "turn off search highlight
-    nnoremap <leader><space> :nohlsearch<CR>
+    "nnoremap <leader>s :Obsess<CR>
 
     "Open FZF Files
-    nnoremap <leader>f :Files<CR>
+    nnoremap <leader>zf :Files<CR>
 
     "Open fzf buffer search
-    nnoremap <leader>b :Buffers<CR>
+    nnoremap <leader>zb :Buffers<CR>
 
-    "open fzf tags search
-    nnoremap <leader>t :Tags<CR>
+    "Telescope
+    nnoremap <leader>ff <cmd>Telescope find_files<cr>
+    nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+    nnoremap <leader>fb <cmd>Telescope buffers<cr>
+    nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+    nnoremap <leader>/ <cmd>Telescope current_buffer_fuzzy_find<cr> 
+
+    "Critque
+    " nnoremap <leader>lc <cmd>CritiqueToggleLineComment<cr>
+    " nnoremap <leader>uc <cmd>CritiqueToggleUnresolvedComments<cr>
+    " nnoremap <leader>ac <cmd>CritiqueToggleAllComments<cr>
+    " nnoremap <leader>fc <cmd>CritiqueFetchComments<cr>
+    " nnoremap <leader>tc <cmd>CritiqueCommentsTelescope<cr>
+
+    "open figtree
+    nnoremap <leader>t :Figtree<CR>
+
     "Open undo tree
     nnoremap <leader>u :MundoToggle<cr>
-
-    "Strip trailing whitespace
-    nnoremap <leader>w :let _s=@/ <Bar> :%s/\s\+$//e <Bar> :let @/=_s <Bar> :nohl <Bar> :unlet _s <CR>
 endif
+
 
 "}}}
 
