@@ -109,10 +109,6 @@ if has('nvim')
     Plug 'tpope/vim-surround'
     "Insert/delete brackets, parens, quotes, in pair
     Plug 'jiangmiao/auto-pairs'
-    "devicons
-    Plug 'kyazdani42/nvim-web-devicons'
-    "devicons
-    Plug 'kyazdani42/nvim-web-devicons'
     "Adds support for plugin maps to .
     Plug 'tpope/vim-repeat'
 
