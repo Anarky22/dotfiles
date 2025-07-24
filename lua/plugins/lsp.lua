@@ -2,15 +2,6 @@ return {
   {
     "neovim/nvim-lspconfig",
     config = function()
-      vim.lsp.config['ciderlsp'] = {
-              cmd = { '/google/bin/releases/cider/ciderlsp/ciderlsp', '--tooltag=nvim-lsp', '--noforward_sync_responses' };
-              filetypes = { "c", "cpp", "java", "kotlin", "objc", "proto", "textproto", "go", "python", "bzl", "typescript", "typescript", "javascript", "soy", "scss", "soy" },
-        root_markers = {".citc"},
-        offset_encoding = "utf-8",
-        settings = {},
-      }
-      vim.lsp.enable("ciderlsp")
-
       local table_contains = function(tbl, value)
         for _, v in pairs(tbl) do
           if v == value then
@@ -145,7 +136,6 @@ return {
           { name = "path" },
           { name = "vim_vsnip" },
           { name = "buffer",   keyword_length = 5 },
-          { name = 'nvim_ciderlsp' },
         },
 
         sorting = {
@@ -164,11 +154,10 @@ return {
             maxwidth = 40, -- half max width
             menu = {
               buffer = "[buffer]",
-              nvim_lsp = "[CiderLSP]",
+              nvim_lsp = "[LSP]",
               nvim_lua = "[API]",
               path = "[path]",
               vim_vsnip = "[snip]",
-              nvim_ciderlsp = "[ML-Autocompletion]"
             },
           }),
         },

@@ -22,7 +22,8 @@ vim.opt.tabstop = 2
 vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 vim.opt.autoindent = true
-vim.opt.shiftwidth=2
+vim.opt.shiftwidth = 2
+vim.opt.showtabline = 2
 
 -- Use tab in makefiles
 local maketab_group = vim.api.nvim_create_augroup("maketab", { clear = true })
@@ -32,14 +33,10 @@ vim.api.nvim_create_autocmd("FileType", {
 	group = maketab_group,
 })
 
--- Backspace work correctly
--- vim.opt.whichwrap = "+,=,<,>,h,l"
--- vim.opt.whichwrap:append('+')
--- vim.opt.whichwrap:append("=")
--- vim.opt.whichwrap:append("<")
--- vim.opt.whichwrap:append(">")
--- vim.opt.whichwrap:append("h")
--- vim.opt.whichwrap:append("l")
+vim.opt.whichwrap = vim.opt.whichwrap + "<"
+vim.opt.whichwrap = vim.opt.whichwrap + ">"
+vim.opt.whichwrap = vim.opt.whichwrap + "h"
+vim.opt.whichwrap = vim.opt.whichwrap + "l"
 
 vim.opt.showmode = true
 

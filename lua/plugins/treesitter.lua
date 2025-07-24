@@ -3,8 +3,10 @@ return {
     "nvim-treesitter/nvim-treesitter",
     version = false,
     build = ":TSUpdate",
-    event = { "VeryLazy"},
-    lazy = vim.fn.argc(-1) == 0,
+    -- event = { "VeryLazy"},
+    -- lazy = vim.fn.argc(-1) == 0,
+    branch = "master",
+    lazy = false,
     init = function(plugin)
       require("lazy.core.loader").add_to_rtp(plugin)
       require("nvim-treesitter.query_predicates")
